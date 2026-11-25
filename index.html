@@ -107,7 +107,93 @@
         }
         .float-reaction { animation: floatHeart 1.3s ease-out forwards; }
 
-        #app-shell { padding-top: env(safe-area-inset-top, 0px); }
+
+        /* RAGAPOP DEV CP-RGP-DEV-001: floating three-control navigation */
+        .ragapop-bottom-dock {
+            display: grid;
+            grid-template-columns: 1fr 1.618fr 1fr;
+            align-items: center;
+            gap: 10px;
+            width: min(100%, 310px);
+            padding: 8px 12px;
+            border: 1px solid rgba(255,255,255,.92);
+            border-radius: 28px;
+            background: rgba(248,246,239,.86);
+            box-shadow: 0 14px 36px rgba(20,43,73,.22), 0 2px 6px rgba(20,43,73,.08);
+            backdrop-filter: blur(24px) saturate(185%);
+            -webkit-backdrop-filter: blur(24px) saturate(185%);
+        }
+        .ragapop-dock-btn {
+            min-height: 48px;
+            min-width: 48px;
+            border-radius: 19px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            color: rgba(20,43,73,.68);
+            font-size: 0;
+            font-weight: 800;
+            transition: transform .16s ease, background .2s ease;
+        }
+        .ragapop-dock-btn:active { transform: scale(.96); }
+        .ragapop-dock-btn.active { background: #142B49; color: #B7F000; }
+        .ragapop-dock-btn.launcher {
+            min-height: 56px;
+            min-width: 56px;
+            background: #B7F000;
+            color: #142B49;
+            font-size: 0;
+            box-shadow: 0 7px 18px rgba(20,43,73,.12);
+        }
+        .ragapop-launcher-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+        .ragapop-launcher-item {
+            min-height: 98px; border-radius: 20px; padding: 12px 7px;
+            background:#fff; box-shadow:0 2px 10px rgba(20,43,73,.06);
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
+            gap:7px; text-align:center; position:relative; touch-action:pan-y;
+        }
+        .ragapop-launcher-item .launcher-icon {
+            width:42px;height:42px;border-radius:15px;background:#F8F6EF;
+            display:flex;align-items:center;justify-content:center;font-size:20px;
+        }
+        .ragapop-launcher-item.dragging { opacity:.35; outline:2px dashed #FF762E; }
+        .ragapop-launcher-item .remove-shortcut {
+            position:absolute;top:5px;right:5px;width:20px;height:20px;border-radius:50%;
+            background:#FF762E;color:white;font-size:13px;display:none;align-items:center;justify-content:center;
+        }
+        .launcher-editing .remove-shortcut { display:flex; }
+        .transaction-category { white-space:nowrap; border-radius:999px; padding:7px 12px; font-size:10px; font-weight:800; }
+        .transaction-category.active { background:#142B49;color:#B7F000; }
+        .transaction-category:not(.active) { background:white;color:rgba(20,43,73,.7); }
+
+        html, body { width: 100%; height: 100%; min-height: 100%; }
+        body { min-height: 100svh; min-height: 100dvh; overscroll-behavior: none; }
+        #app-shell {
+            height: 100svh;
+            height: 100dvh;
+            padding-top: env(safe-area-inset-top, 0px);
+            padding-bottom: 0;
+        }
+        .ragapop-dock-position {
+            bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+        }
+        @media (min-width: 640px) {
+            .ragapop-dock-position { bottom: 16px; }
+        }
+        #main-shell-view { min-height: 0; }
+        #main-scroll-container {
+            min-height: 0;
+            padding-bottom: calc(116px + env(safe-area-inset-bottom, 0px));
+            overscroll-behavior-y: contain;
+            -webkit-overflow-scrolling: touch;
+            scroll-padding-bottom: calc(116px + env(safe-area-inset-bottom, 0px));
+        }
+        .ragapop-dock-position {
+            bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+            padding-left: max(12px, env(safe-area-inset-left, 0px));
+            padding-right: max(12px, env(safe-area-inset-right, 0px));
+        }
         #page-root { contain: layout style; }
         .h-swipe-track { will-change: transform; }
         .radar-paused .radar-ring { animation-play-state: paused; }
@@ -195,40 +281,41 @@
             </main>
 
             <!-- ========================================================= -->
-            <!-- STREAMLINED 4-TAB DOCK + CENTER '+' SMART ACTION HUB      -->
-            <!-- ========================================================= -->
-            <div class="pointer-events-none absolute bottom-4 inset-x-3 z-30 flex justify-center">
-                <nav class="pointer-events-auto w-full ios-glass-light ios-shadow-float border border-white/90 rounded-[28px] px-2 py-1.5 grid grid-cols-5 items-center gap-1">
-                    <button type="button" class="nav-tab-btn ios-tap flex flex-col items-center justify-center py-1.5 rounded-[20px] bg-[#142B49] text-[#B7F000]" data-tab="HOME">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z"/><path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z"/></svg>
-                        <span class="text-[9px] font-bold tracking-tight mt-0.5">Home</span>
+            <!-- RAGAPOP CP-RGP-DEV-001: three-control floating navigation -->
+            <div class="pointer-events-none absolute ragapop-dock-position inset-x-0 z-30 flex justify-center">
+                <nav class="pointer-events-auto ragapop-bottom-dock" aria-label="Main navigation">
+                    <button type="button" class="ragapop-dock-btn active" id="dock-home-btn" aria-label="Home">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.47 3.84a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 1-1.06 1.06L12 5.43l-8.16 8.16a.75.75 0 1 1-1.06-1.06l8.69-8.69Z"/><path d="M5 12.5 12 5.5l7 7V20a1 1 0 0 1-1 1h-4v-5h-4v5H6a1 1 0 0 1-1-1v-7.5Z"/></svg>
                     </button>
-
-                    <button type="button" class="nav-tab-btn ios-tap flex flex-col items-center justify-center py-1.5 rounded-[20px] text-[#142B49]/65" data-tab="MEDIA">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5"/></svg>
-                        <span class="text-[9px] font-semibold tracking-tight mt-0.5">Media</span>
+                    <button type="button" class="ragapop-dock-btn launcher" id="open-smart-hub-btn" aria-label="Smart Launcher">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="6" height="6" rx="1.5"/><rect x="14.5" y="3.5" width="6" height="6" rx="1.5"/><rect x="3.5" y="14.5" width="6" height="6" rx="1.5"/><rect x="14.5" y="14.5" width="6" height="6" rx="1.5"/></svg>
                     </button>
-
-                    <div class="flex justify-center">
-                        <button id="open-smart-hub-btn" type="button" class="ios-tap w-12 h-11 rounded-[18px] bg-[#B7F000] text-[#142B49] ios-shadow-md flex items-center justify-center ring-2 ring-[#142B49]/10" aria-label="Smart Action Hub">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <button type="button" class="nav-tab-btn ios-tap flex flex-col items-center justify-center py-1.5 rounded-[20px] text-[#142B49]/65" data-tab="EVENTS">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z"/></svg>
-                        <span class="text-[9px] font-semibold tracking-tight mt-0.5">Events</span>
-                    </button>
-
-                    <button type="button" class="nav-tab-btn ios-tap relative flex flex-col items-center justify-center py-1.5 rounded-[20px] text-[#142B49]/65" data-tab="RETAIL">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007Z"/></svg>
-                        <span class="text-[9px] font-semibold tracking-tight mt-0.5">Retail</span>
-                        <span id="nav-retail-dot" class="hidden absolute top-1.5 right-3 w-1.5 h-1.5 rounded-full bg-[#FF762E]"></span>
+                    <button type="button" class="ragapop-dock-btn" id="dock-transactions-btn" aria-label="Transactions">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h10"/><circle cx="18" cy="17" r="3"/></svg>
                     </button>
                 </nav>
             </div>
+        </div>
+
+        <!-- Smart Launcher: editable 3x3 shortcut grid -->
+        <div id="ragapop-launcher-modal" class="hidden absolute inset-0 z-[55] bg-[#142B49]/45 backdrop-blur-sm flex flex-col justify-end">
+            <section class="bg-[#F8F6EF] text-[#142B49] rounded-t-[30px] px-4 pt-4 pb-8 max-h-[88%] overflow-y-auto ios-shadow-float">
+                <div class="w-9 h-1 rounded-full bg-[#142B49]/20 mx-auto mb-4"></div>
+                <div class="flex items-center justify-between mb-4">
+                    <div><p class="text-[10px] font-extrabold tracking-widest text-[#FF762E]">RAGAPOP ECOSYSTEM</p><h2 class="font-sf-display text-xl font-extrabold">Smart Launcher</h2></div>
+                    <button id="close-ragapop-launcher" type="button" class="w-9 h-9 rounded-full bg-[#142B49]/[0.08] font-bold">✕</button>
+                </div>
+                <div class="flex items-center justify-between mb-3">
+                    <p class="text-[11px] text-[#142B49]/60">Your shortcuts · 3 × 3</p>
+                    <button id="launcher-edit-toggle" type="button" class="text-[11px] font-extrabold px-3 py-2 rounded-full bg-[#142B49] text-[#B7F000]">Edit</button>
+                </div>
+                <div id="ragapop-launcher-grid" class="ragapop-launcher-grid"></div>
+                <div id="launcher-catalog-wrap" class="hidden mt-5">
+                    <div class="flex items-center justify-between mb-2"><h3 class="text-sm font-extrabold">Shortcut Catalog</h3><button id="launcher-reset-btn" class="text-[10px] font-bold text-[#FF762E]">Reset</button></div>
+                    <div id="launcher-catalog" class="grid grid-cols-3 gap-2"></div>
+                    <p class="text-[9px] text-[#142B49]/50 mt-3">Drag shortcuts to reorder. Changes are saved on this device.</p>
+                </div>
+            </section>
         </div>
 
         <!-- ========================================================= -->
@@ -890,8 +977,16 @@
                         <span>Pocket E-Wallet Balance</span>
                         <span id="cart-pocket-bal" class="font-bold text-[#142B49]">Rp 4.850.000</span>
                     </div>
+                    <div class="space-y-2">
+                        <p class="text-[10px] font-extrabold uppercase tracking-wider text-[#142B49]/55">Fulfillment</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button type="button" data-fulfillment="Shipping" class="retail-fulfillment-choice rounded-xl border border-[#142B49]/15 p-2.5 text-[11px] font-bold bg-[#142B49] text-white">🚚 Shipping</button>
+                            <button type="button" data-fulfillment="Pickup" class="retail-fulfillment-choice rounded-xl border border-[#142B49]/15 p-2.5 text-[11px] font-bold bg-white">📍 Pickup</button>
+                        </div>
+                        <p id="fulfillment-hint" class="text-[9px] text-[#142B49]/55">Delivery fee Rp 20.000 · Demo carrier tracking</p>
+                    </div>
                     <div class="flex items-center justify-between text-xs">
-                        <span class="font-medium text-[#142B49]/60">Total + Delivery (+200 Pts)</span>
+                        <span id="cart-total-label" class="font-medium text-[#142B49]/60">Total + Delivery (+200 Pts)</span>
                         <span id="cart-total-amount" class="font-sf-display text-base font-extrabold">Rp 0</span>
                     </div>
                     <button id="checkout-submit-btn" type="button" class="ios-tap w-full py-3.5 rounded-full bg-[#B7F000] text-[#142B49] text-xs font-extrabold">Pay with RAGAPOP PAY</button>
@@ -939,7 +1034,8 @@
             RETAIL: { badge: 'Retail', kicker: 'OFFICIAL STORE',        title: 'Store & Zines',    sub: 'Limited Drops',    hasFilters: true,  filters: ['Semua Produk', 'Apparel', 'Aksesoris', 'Zine & Cetak'] },
             GROW:   { badge: 'Grow',   kicker: 'HEALTH & PRODUCTIVITY', title: 'Grow Hub',         sub: 'AI & Coaching',    hasFilters: false, filters: [] },
             POCKET: { badge: 'Pocket', kicker: 'WALLET & WEALTH',       title: 'Pocket',           sub: 'Pay & Invest',     hasFilters: false, filters: [] },
-            CIRCLE: { badge: 'Circle', kicker: 'MY CIRCLE & RADAR',     title: 'Circle',           sub: 'South Jakarta',    hasFilters: false, filters: [] }
+            CIRCLE: { badge: 'Circle', kicker: 'MY CIRCLE & RADAR',     title: 'Circle',           sub: 'South Jakarta',    hasFilters: false, filters: [] },
+            TRANSACTIONS: { badge: 'Activity', kicker: 'ALL ECOSYSTEM ACTIVITY', title: 'Transaction Center', sub: 'Financial & non-financial', hasFilters: false, filters: [] },
         };
 
         const NEWS_TEMPLATES = [
@@ -1514,7 +1610,7 @@
             mediaItems: [],
             mediaCursor: 0,
             isLoading: false,
-            savedScrollByTab: { HOME: 0, MEDIA: 0, EVENTS: 0, RETAIL: 0, GROW: 0, POCKET: 0, CIRCLE: 0 },
+            savedScrollByTab: { HOME: 0, MEDIA: 0, EVENTS: 0, RETAIL: 0, GROW: 0, POCKET: 0, CIRCLE: 0, TRANSACTIONS: 0 },
             activeDetailItem: null,
             newsFontSize: 16,
             newsComments: { default: [{ author: 'Raka P.', text: 'Kurasi yang selalu relevan dengan dinamika kota.' }] },
@@ -1525,8 +1621,8 @@
             selectedEventTierIdx: 0,
             selectedEventQty: 1,
             bookedTickets: [
-                { code: 'RGP-8821', eventTitle: 'RAGAPOP Sound Sessions', tierName: 'Early Entry Pass', qty: 1, holder: 'Raka Pratama' },
-                { code: 'RGP-4109', eventTitle: 'Jakarta Night Run 7K', tierName: 'Community Runner', qty: 1, holder: 'Raka Pratama' }
+                { id: 'TKT-RGP-8821', code: 'RGP-8821', eventTitle: 'RAGAPOP Sound Sessions', tierName: 'Early Entry Pass', qty: 1, holder: 'Raka Pratama', status: 'Active', createdAt: '2026-11-24T09:00:00+07:00', eventDate: 'Sabtu, 28 Nov 2026', eventTime: '16:30 – 22:00 WIB', venue: 'M Bloc Live House', city: 'Jakarta Selatan' },
+                { id: 'TKT-RGP-4109', code: 'RGP-4109', eventTitle: 'Jakarta Night Run 7K', tierName: 'Community Runner', qty: 1, holder: 'Raka Pratama', status: 'Active', createdAt: '2026-11-20T09:00:00+07:00', eventDate: 'Minggu, 29 Nov 2026', eventTime: '19:00 – 21:30 WIB', venue: 'Taman Literasi Blok M', city: 'Jakarta Selatan' }
             ],
             selectedProductVariant: '',
             cart: [{ id: 'prod_1', name: 'RAGAPOP Heavyweight Boxy Tee', variant: 'L', price: 329000, qty: 1, imgUrl: 'https://picsum.photos/seed/ragapop_prod_1/500/625' }],
@@ -1540,6 +1636,9 @@
             growBookedSessions: [],
             pocketBalance: 4850000,
             pocketInvestFilter: 'Semua',
+            retailOrders: [],
+            coupons: [{ id: 'CPN-DEMO-001', merchant: 'RAGAPOP Market', benefit: 'Rp 25.000 off', terms: 'Minimum purchase Rp 150.000', validity: '31 Desember 2026', redemptionLocation: 'RAGAPOP Market Partner Counter (Demo)', status: 'Available', code: 'RGP25DEMO' }],
+            activityLog: [],
             pocketTransactions: [
                 { title: 'Kopi Tuku Blok M (QRIS)', date: 'Hari ini, 09:20', amount: -28000, type: 'out' },
                 { title: 'Cashback RAGAPOP+ Member', date: 'Kemarin', amount: 75000, type: 'in' },
@@ -1568,6 +1667,8 @@
         };
 
         const els = {
+            iosStatusBar: document.getElementById('ios-status-bar'),
+            statusClockLabel: document.getElementById('status-clock-label'),
             headerBadge: document.getElementById('header-section-badge'),
             collapsibleFilter: document.getElementById('collapsible-filter-area'),
             filterContainer: document.getElementById('filter-container'),
@@ -1708,6 +1809,8 @@
             state.savedScrollByTab[state.activeTab] = els.mainScroll.scrollTop;
             unmountInactivePages(newTab);
             state.activeTab = newTab;
+            document.getElementById('dock-home-btn')?.classList.toggle('active', newTab === 'HOME');
+            document.getElementById('dock-transactions-btn')?.classList.toggle('active', newTab === 'TRANSACTIONS');
             const cfg = TAB_CONFIG[newTab];
             state.activeFilter = cfg.hasFilters ? cfg.filters[0] : 'Semua';
 
@@ -1819,6 +1922,8 @@
                 renderPocketPage();
             } else if (state.activeTab === 'CIRCLE') {
                 renderCirclePage();
+            } else if (state.activeTab === 'TRANSACTIONS') {
+                renderTransactionCenter();
             }
         }
 
@@ -1830,6 +1935,7 @@
         function renderHomePage() {
             const ctxTime = SMART_CONTEXT_PROFILES[state.timePeriod];
             const smartCard = ctxTime[state.focusMode];
+            els.statusClockLabel.textContent = ctxTime.clock;
 
             const heroSection = document.createElement('section');
             heroSection.className = 'px-3.5 pt-1.5 pb-2.5 w-full';
@@ -3578,6 +3684,123 @@
             els.spotlightResults.innerHTML = html;
         }
 
+
+        // Demo QR rendering uses a public QR image endpoint; tokens are prototype IDs only.
+        function demoQrUrl(value) {
+            return 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=8&data=' + encodeURIComponent(String(value));
+        }
+        // RAGAPOP CP-RGP-DEV-001: unified activity center.
+        let transactionCategory = 'All';
+        function buildTransactionRecords() {
+            const records = [];
+            (state.pocketTransactions || []).forEach((tx, i) => records.push({
+                id: tx.id || `PAY-${i}`, sourceId: tx.id || `PAY-${i}`, category: 'Payments',
+                title: tx.title, date: tx.date, createdAt: tx.createdAt || '', amount: tx.amount, source: 'Pocket',
+                detail: `${tx.type === 'in' ? 'Incoming' : 'Outgoing'} · ${formatRupiah(Math.abs(tx.amount))}`
+            }));
+            (state.bookedTickets || []).forEach((ticket, i) => records.push({
+                id: ticket.code || ticket.id || `TKT-${i}`, sourceId: ticket.code || ticket.id || `TKT-${i}`,
+                category: 'Events', title: ticket.eventTitle, date: ticket.createdAt || 'Ticket wallet', createdAt: ticket.createdAt || '',
+                amount: null, source: 'Events', detail: `${ticket.qty || 1} × ${ticket.tierName} · ${ticket.status || 'Active'}`
+            }));
+            (state.retailOrders || []).forEach(order => records.push({
+                id: order.id, sourceId: order.id, category: 'Retail', title: order.title,
+                date: order.createdAt, createdAt: order.createdAt, amount: order.total, source: 'Retail', detail: `${order.status} · ${order.fulfillment || 'Shipping'}`
+            }));
+            (state.coupons || []).forEach(coupon => records.push({
+                id: coupon.id, sourceId: coupon.id, category: 'Coupons', title: coupon.merchant,
+                date: coupon.validity, amount: null, source: 'Coupons', detail: `${coupon.benefit} · ${coupon.status}`
+            }));
+            (state.activityLog || []).forEach(item => records.push(item));
+            return records;
+        }
+        function renderTransactionCenter() {
+            const categories = ['All','Events','Retail','Coupons','Payments','Transfers','Investments','Rewards','Memberships'];
+            const records = buildTransactionRecords().filter(r => transactionCategory === 'All' || r.category === transactionCategory);
+            const wrap = document.createElement('section');
+            wrap.className = 'px-4 pb-8 space-y-4';
+            wrap.innerHTML = `
+                <div class="rounded-[24px] bg-[#142B49] text-[#F8F6EF] p-4 ios-shadow-md">
+                    <p class="text-[10px] uppercase tracking-widest font-extrabold text-[#B7F000]">RAGAPOP ECOSYSTEM</p>
+                    <h2 class="font-sf-display text-xl font-extrabold mt-1">Transaction Center</h2>
+                    <p class="text-[11px] text-white/65 mt-1">One activity view across financial and non-financial services</p>
+                    <div class="grid grid-cols-3 gap-2 mt-4">
+                        <div class="rounded-2xl bg-white/10 p-3"><p class="text-[9px] text-white/60">Tickets</p><b class="text-lg">${state.bookedTickets.length}</b></div>
+                        <div class="rounded-2xl bg-white/10 p-3"><p class="text-[9px] text-white/60">Orders</p><b class="text-lg">${state.retailOrders.length}</b></div>
+                        <div class="rounded-2xl bg-white/10 p-3"><p class="text-[9px] text-white/60">Coupons</p><b class="text-lg">${(state.coupons || []).filter(c=>c.status==='Available').length}</b></div>
+                    </div>
+                </div>
+                <div class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1" id="transaction-categories">
+                    ${categories.map(c=>`<button class="transaction-category ${transactionCategory===c?'active':''}" data-category="${c}">${c}</button>`).join('')}
+                </div>
+                <div class="flex items-center justify-between"><h3 class="font-sf-display text-sm font-extrabold">Recent Activity</h3><span class="text-[10px] text-[#142B49]/50">${records.length} records</span></div>
+                <div class="rounded-[22px] bg-white ios-shadow-sm divide-y divide-[#142B49]/[0.08]" id="transaction-record-list">
+                    ${records.length ? records.sort((a,b)=>{const ta=Date.parse(a.createdAt || '') || 0; const tb=Date.parse(b.createdAt || '') || 0; return tb-ta;}).map(r=>`
+                        <button type="button" class="w-full p-3.5 flex items-center gap-3 text-left" data-record-id="${escapeHTML(String(r.id))}" data-record-source="${r.source}">
+                            <span class="w-10 h-10 rounded-2xl bg-[#F8F6EF] flex items-center justify-center text-lg">${({Events:'🎟️',Retail:'🛍️',Coupons:'🎫',Payments:'💳',Transfers:'↔️',Investments:'📈',Rewards:'⭐',Memberships:'♧'})[r.category]||'•'}</span>
+                            <span class="flex-1 min-w-0"><b class="block text-xs truncate">${escapeHTML(r.title)}</b><small class="block text-[10px] text-[#142B49]/55 mt-0.5">${escapeHTML(r.category)} · ${escapeHTML(String(r.date))}</small><small class="block text-[10px] text-[#142B49]/70 mt-0.5">${escapeHTML(r.detail)}</small></span>
+                            <span class="text-[10px] font-extrabold ${r.amount<0?'text-[#FF762E]':'text-[#142B49]'}">${r.amount===null?'›':formatRupiah(r.amount)}</span>
+                        </button>`).join('') : `<div class="p-8 text-center text-xs text-[#142B49]/55">No activity in this category yet.</div>`}
+                </div>
+                <p class="text-[9px] leading-relaxed text-[#142B49]/45">Prototype data: separate source records are retained for Pocket, Events, Retail, and Coupons. Production synchronization requires backend services.</p>
+            `;
+            wrap.querySelectorAll('[data-category]').forEach(btn=>btn.addEventListener('click',()=>{transactionCategory=btn.dataset.category;renderTransactionCenter();}));
+            wrap.querySelectorAll('[data-record-id]').forEach(btn=>btn.addEventListener('click',()=>openTransactionRecord(btn.dataset.recordId,btn.dataset.recordSource)));
+            els.pageRoot.appendChild(wrap);
+        }
+        function openTransactionRecord(id, source) {
+            let title = 'Activity detail', body = '';
+            if (source === 'Events') {
+                const t = state.bookedTickets.find(x => String(x.code || x.id) === id || String(x.id) === id);
+                if (t) {
+                    const ev = EVENTS_DATA.find(e => e.title === t.eventTitle);
+                    title = 'Event Ticket';
+                    body = `<div class="space-y-3"><div class="rounded-2xl bg-[#142B49] text-white p-4"><p class="text-[10px] text-[#B7F000] font-bold">RAGAPOP EVENT PASS</p><h3 class="font-bold mt-2">${escapeHTML(t.eventTitle)}</h3><p class="text-xs mt-1">${escapeHTML(t.holder || 'Ticket holder')} · ${t.qty || 1} × ${escapeHTML(t.tierName)}</p><p class="text-xs mt-2">${escapeHTML(t.eventDate || ev?.dateLabel || 'Event date per event listing')} · ${escapeHTML(t.eventTime || ev?.timeLabel || '')}</p><p class="text-xs">${escapeHTML(t.venue || ev?.venue || 'Venue per event listing')}${(t.city || ev?.city) ? ', '+escapeHTML(t.city || ev.city):''}</p><p class="font-mono-code text-sm text-[#F9E58A] mt-3">${escapeHTML(t.code || id)}</p><div class="bg-white p-3 rounded-xl mt-3 flex justify-center"><img alt="Ticket QR code" class="w-40 h-40" src="${demoQrUrl('RAGAPOP-TICKET:'+String(t.code || id))}"></div><p class="text-[9px] text-white/55 mt-2">QR contains a demo ticket token. Entry validation and anti-duplication require a connected ticketing backend.</p></div><p class="text-xs">Status: <b>${escapeHTML(t.status || 'Active')}</b></p><div class="grid grid-cols-3 gap-2">${['Used','Cancelled','Refunded'].map(st=>`<button type="button" onclick="setDemoTicketStatus('${escapeHTML(t.id || t.code)}','${st}')" class="rounded-xl p-2 text-[10px] font-bold border border-[#142B49]/15 ${t.status===st?'bg-[#142B49] text-white':'bg-white'}">${st}</button>`).join('')}</div></div>`;
+                }
+            } else if (source === 'Retail') {
+                const o = state.retailOrders.find(x=>x.id===id);
+                if (o) {
+                    title='Retail Order';
+                    const stages = o.fulfillment==='Pickup' ? ['Order confirmed','Processing','Ready for pickup','Handed over'] : ['Order confirmed','Processing','Packed','Shipped','In transit','Out for delivery','Delivered'];
+                    const next = stages.indexOf(o.status) < stages.length-1 ? stages[stages.indexOf(o.status)+1] : null;
+                    body=`<div class="space-y-3"><p class="font-bold">${escapeHTML(o.title)}</p><p class="text-xs">Order ${escapeHTML(o.id)}</p><p class="text-xs">Total: <b>${formatRupiah(o.total)}</b></p><div class="p-3 rounded-2xl bg-white space-y-2 text-xs"><b>Fulfillment: ${escapeHTML(o.fulfillment)}</b><p>Status: <b>${escapeHTML(o.status)}</b></p>${o.fulfillment==='Pickup'?`<p>Pickup point: ${escapeHTML(o.pickupLocation || 'RAGAPOP Pickup Point (Demo)')}</p><p>Hours: ${escapeHTML(o.pickupHours || '10:00–20:00 WIB (Demo)')}</p><p>Pickup code: <b class="font-mono-code">${escapeHTML(o.pickupCode || '')}</b></p><div class="flex justify-center bg-white p-2"><img alt="Pickup QR code" class="w-36 h-36" src="${demoQrUrl('RAGAPOP-PICKUP:'+o.id+':'+(o.pickupCode||''))}"></div>`:`<p>Carrier: ${escapeHTML(o.carrier || 'RAGAPOP Demo Logistics')}</p><p>Tracking: <b>${escapeHTML(o.trackingNumber || 'Pending')}</b></p>`}<div class="pt-2 border-t border-[#142B49]/10"><b>Fulfillment timeline</b>${stages.map(st=>`<p class="${st===o.status?'font-extrabold text-[#FF762E]':'text-[#142B49]/55'}">• ${st}${stages.indexOf(st)<=stages.indexOf(o.status)?' ✓':''}</p>`).join('')}</div></div>${next?`<button type="button" onclick="advanceDemoRetailOrder('${escapeHTML(o.id)}')" class="w-full py-3 rounded-full bg-[#B7F000] text-[#142B49] text-xs font-extrabold">${o.fulfillment==='Pickup'&&next==='Handed over'?'Confirm Direct Handover':'Simulate: '+next}</button>`:''}<p class="text-[9px] text-[#142B49]/50">All fulfillment updates are simulated locally. No live carrier, store inventory, or handover verification is connected.</p></div>`;
+                }
+            } else if (source === 'Coupons') {
+                const c = state.coupons.find(x=>x.id===id);
+                if (c) { title='Coupon Wallet'; body=`<div class="rounded-2xl bg-[#142B49] text-white p-4"><p class="text-[10px] text-[#B7F000] font-bold">${escapeHTML(c.merchant)}</p><h3 class="text-xl font-extrabold mt-2">${escapeHTML(c.benefit)}</h3><p class="text-xs mt-2">${escapeHTML(c.terms)}</p><p class="text-[10px] mt-3">Valid until ${escapeHTML(c.validity)}</p><p class="text-[10px] mt-2">Redeem at: ${escapeHTML(c.redemptionLocation || c.merchant)}</p><div class="bg-white rounded-xl p-3 flex justify-center mt-4"><img alt="Coupon QR code" class="w-40 h-40" src="${demoQrUrl('RAGAPOP-COUPON:'+c.id+':'+c.code)}"></div><div class="bg-white text-[#142B49] rounded-xl p-3 text-center font-mono-code mt-3">${escapeHTML(c.code)}</div><p class="text-xs mt-2">Status: <b>${escapeHTML(c.status)}</b></p><button type="button" onclick="redeemDemoCoupon('${escapeHTML(c.id)}')" class="w-full mt-3 py-3 rounded-full bg-[#B7F000] text-[#142B49] text-xs font-extrabold" ${c.status!=='Available'?'disabled':''}>${c.status==='Available'?'Simulate Redemption':escapeHTML(c.status)}</button></div><p class="text-[9px] mt-2 text-[#142B49]/50">QR contains a demo coupon token. Merchant-side validation, one-time redemption enforcement, and offline scanning require backend integration.</p>`; }
+            } else if (source === 'Pocket') {
+                const tx=state.pocketTransactions.find((x,i)=>(x.id||`PAY-${i}`)===id);
+                if(tx){title='Pocket Activity';body=`<p class="text-sm font-bold">${escapeHTML(tx.title)}</p><p class="text-xs mt-2">${escapeHTML(tx.date)}</p><p class="text-base font-extrabold mt-3">${formatRupiah(tx.amount)}</p>`;}
+            }
+            els.sheetModalTitle.textContent=title;
+            els.sheetModalBody.innerHTML=body || '<p class="text-xs">Record detail unavailable.</p>';
+            els.interactiveSheetModal.classList.remove('hidden');
+        }
+        function setDemoTicketStatus(id, status) {
+            const t=state.bookedTickets.find(x=>String(x.id||x.code)===String(id));
+            if(!t || !['Active','Used','Cancelled','Refunded'].includes(status)) return;
+            t.status=status; showToast(`Ticket status: ${status}`);
+            openTransactionRecord(t.code || t.id, 'Events');
+            if(state.activeTab==='TRANSACTIONS') renderActivePage();
+        }
+        function advanceDemoRetailOrder(id) {
+            const o=state.retailOrders.find(x=>x.id===id); if(!o) return;
+            const stages=o.fulfillment==='Pickup'?['Order confirmed','Processing','Ready for pickup','Handed over']:['Order confirmed','Processing','Packed','Shipped','In transit','Out for delivery','Delivered'];
+            const idx=stages.indexOf(o.status); if(idx<0 || idx>=stages.length-1) return;
+            o.status=stages[idx+1]; o.timeline=o.timeline||[]; o.timeline.push(o.status);
+            if(o.status==='Shipped') o.shippedAt=new Date().toISOString();
+            showToast(o.fulfillment==='Pickup'&&o.status==='Handed over'?'Direct handover completed (demo)':`Order updated: ${o.status}`);
+            openTransactionRecord(o.id,'Retail');
+            if(state.activeTab==='TRANSACTIONS') renderActivePage();
+        }
+        function redeemDemoCoupon(id) {
+            const c=state.coupons.find(x=>x.id===id);
+            if(!c || c.status!=='Available') return;
+            c.status='Redeemed'; showToast('Demo coupon marked as redeemed');
+            els.interactiveSheetModal.classList.add('hidden');
+            if(state.activeTab==='TRANSACTIONS') renderActivePage();
+        }
+
         /**
          * ============================================================================
          * SMART ACTION HUB ('+' BUTTON)
@@ -3593,7 +3816,87 @@
             else if (type === 'GROW') switchTab('GROW');
             else if (type === 'POCKET') switchTab('POCKET');
             else if (type === 'CIRCLE') switchTab('CIRCLE');
+            else if (type === 'MEDIA' || type === 'EVENTS' || type === 'RETAIL' || type === 'TRANSACTIONS') switchTab(type);
+            else if (type === 'JOURNAL') { switchTab('MEDIA'); setTimeout(() => { const journal = state.mediaItems.find(x => x.type === 'journal'); if (journal) openItemDetail(journal); }, 80); }
         }
+
+
+        // Smart Launcher: 3x3 shortcuts with device-local persistence.
+        const LAUNCHER_CATALOG = [
+            {id:'SCAN_MEAL',label:'AI Scan Meal',icon:'📸',action:'SCAN_MEAL'},
+            {id:'QRIS',label:'QRIS Pay',icon:'▦',action:'QRIS'},
+            {id:'JOURNAL',label:'My Journal',icon:'✍️',action:'JOURNAL'},
+            {id:'CIRCLE',label:'Circle',icon:'◎',action:'CIRCLE'},
+            {id:'GROW',label:'Grow',icon:'🌱',action:'GROW'},
+            {id:'POCKET',label:'Pocket',icon:'💳',action:'POCKET'},
+            {id:'MEDIA',label:'Media',icon:'📰',action:'MEDIA'},
+            {id:'EVENTS',label:'Events',icon:'🎟️',action:'EVENTS'},
+            {id:'RETAIL',label:'Retail',icon:'🛍️',action:'RETAIL'},
+            {id:'TRANSACTIONS',label:'Transaction Center',icon:'↔️',action:'TRANSACTIONS'}
+        ];
+        const LAUNCHER_DEFAULTS = ['SCAN_MEAL','QRIS','JOURNAL','CIRCLE','GROW','POCKET','MEDIA','EVENTS','RETAIL'];
+        let launcherShortcuts = [...LAUNCHER_DEFAULTS];
+        let launcherEditing = false;
+        try { const saved=JSON.parse(localStorage.getItem('ragapop_launcher_v1')||'null'); if(Array.isArray(saved)) launcherShortcuts=saved.filter(id=>LAUNCHER_CATALOG.some(x=>x.id===id)).slice(0,9); } catch(e) {}
+        function persistLauncher(){ try{localStorage.setItem('ragapop_launcher_v1',JSON.stringify(launcherShortcuts));}catch(e){} }
+        function renderLauncherGrid(){
+            const grid=document.getElementById('ragapop-launcher-grid'); if(!grid)return;
+            grid.classList.toggle('launcher-editing',launcherEditing);
+            grid.innerHTML=launcherShortcuts.map((id,index)=>{const item=LAUNCHER_CATALOG.find(x=>x.id===id);if(!item)return '';return `<button type="button" class="ragapop-launcher-item" draggable="${launcherEditing}" data-shortcut="${item.id}" data-index="${index}"><span class="remove-shortcut" data-remove="${item.id}">×</span><span class="launcher-icon">${item.icon}</span><span class="text-[10px] font-extrabold leading-tight">${item.label}</span></button>`;}).join('');
+            grid.querySelectorAll('[data-shortcut]').forEach(el=>{
+                el.addEventListener('click',e=>{if(e.target.closest('[data-remove]'))return;if(launcherEditing)return;triggerLauncherAction(el.dataset.shortcut);});
+                el.addEventListener('dragstart',e=>{if(!launcherEditing){e.preventDefault();return;}e.dataTransfer.setData('text/plain',el.dataset.shortcut);el.classList.add('dragging');});
+                el.addEventListener('dragend',()=>el.classList.remove('dragging'));
+                el.addEventListener('dragover',e=>{if(launcherEditing)e.preventDefault();});
+                el.addEventListener('drop',e=>{if(!launcherEditing)return;e.preventDefault();const from=e.dataTransfer.getData('text/plain'),to=el.dataset.shortcut;const a=launcherShortcuts.indexOf(from),b=launcherShortcuts.indexOf(to);if(a>=0&&b>=0){launcherShortcuts.splice(a,1);launcherShortcuts.splice(b,0,from);persistLauncher();renderLauncherGrid();}});
+            });
+            // Pointer/touch reorder: hold a shortcut briefly, then drag it over another slot.
+            let touchDragId = null, touchHoldTimer = null;
+            grid.querySelectorAll('[data-shortcut]').forEach(el => {
+                el.addEventListener('pointerdown', () => {
+                    if (!launcherEditing) return;
+                    touchHoldTimer = setTimeout(() => {
+                        touchDragId = el.dataset.shortcut;
+                        el.classList.add('dragging');
+                    }, 260);
+                });
+                ['pointerup','pointercancel','pointerleave'].forEach(evt => el.addEventListener(evt, () => clearTimeout(touchHoldTimer)));
+                el.addEventListener('pointerenter', () => {
+                    if (!launcherEditing || !touchDragId || touchDragId === el.dataset.shortcut) return;
+                    const from = launcherShortcuts.indexOf(touchDragId), to = launcherShortcuts.indexOf(el.dataset.shortcut);
+                    if (from >= 0 && to >= 0) {
+                        const [moved] = launcherShortcuts.splice(from, 1);
+                        launcherShortcuts.splice(to, 0, moved);
+                        persistLauncher();
+                        renderLauncherGrid();
+                        touchDragId = null;
+                    }
+                });
+            });
+            grid.querySelectorAll('[data-remove]').forEach(btn=>btn.addEventListener('click',e=>{e.stopPropagation();launcherShortcuts=launcherShortcuts.filter(x=>x!==btn.dataset.remove);persistLauncher();renderLauncherGrid();renderLauncherCatalog();}));
+            document.getElementById('launcher-edit-toggle').textContent=launcherEditing?'Done':'Edit';
+            document.getElementById('launcher-catalog-wrap').classList.toggle('hidden',!launcherEditing);
+            renderLauncherCatalog();
+        }
+        function renderLauncherCatalog(){
+            const host=document.getElementById('launcher-catalog');if(!host)return;
+            host.innerHTML=LAUNCHER_CATALOG.filter(x=>!launcherShortcuts.includes(x.id)).map(x=>`<button type="button" data-add-shortcut="${x.id}" class="p-2 rounded-xl bg-white text-center"><span class="block text-lg">${x.icon}</span><span class="block text-[9px] font-bold mt-1">${x.label}</span><span class="text-[8px] text-[#FF762E] font-bold">+ Add</span></button>`).join('')||'<p class="col-span-3 text-[10px] text-[#142B49]/50">All shortcuts are already added.</p>';
+            host.querySelectorAll('[data-add-shortcut]').forEach(b=>b.addEventListener('click',()=>{if(launcherShortcuts.length>=9){showToast('Remove a shortcut before adding another');return;}launcherShortcuts.push(b.dataset.addShortcut);persistLauncher();renderLauncherGrid();}));
+        }
+        function openSmartHubModal(){document.getElementById('ragapop-launcher-modal').classList.remove('hidden');renderLauncherGrid();}
+        function closeSmartHubModal(){document.getElementById('ragapop-launcher-modal').classList.add('hidden');launcherEditing=false;}
+        function triggerLauncherAction(id){
+            closeSmartHubModal();
+            const item=LAUNCHER_CATALOG.find(x=>x.id===id);if(!item)return;
+            triggerSmartHubAction(item.action);
+        }
+        document.getElementById('close-ragapop-launcher').addEventListener('click',closeSmartHubModal);
+        document.getElementById('ragapop-launcher-modal').addEventListener('click',e=>{if(e.target.id==='ragapop-launcher-modal')closeSmartHubModal();});
+        document.getElementById('launcher-edit-toggle').addEventListener('click',()=>{launcherEditing=!launcherEditing;renderLauncherGrid();});
+        document.getElementById('launcher-reset-btn').addEventListener('click',()=>{launcherShortcuts=[...LAUNCHER_DEFAULTS];persistLauncher();renderLauncherGrid();});
+        document.getElementById('dock-home-btn').addEventListener('click',()=>switchTab('HOME'));
+        document.getElementById('dock-transactions-btn').addEventListener('click',()=>switchTab('TRANSACTIONS'));
+
 
         /**
          * ============================================================================
@@ -4077,12 +4380,12 @@
             if (total > state.pocketBalance) { showToast('Insufficient Pocket balance!'); return; }
             if (total > 0) {
                 state.pocketBalance -= total;
-                state.pocketTransactions.unshift({ title: `Pass: ${ev.title}`, date: 'Baru saja', amount: -total, type: 'out' });
+                state.pocketTransactions.unshift({ id: `PAY-${Date.now()}`, title: `Pass: ${ev.title}`, date: 'Baru saja', createdAt: new Date().toISOString(), amount: -total, type: 'out' });
             }
             state.ragaPoints += 150;
             const holder = document.getElementById('ev-buyer-name').value.trim() || 'Raka Pratama';
             const code = `RGP-${Math.floor(1000 + Math.random() * 9000)}`;
-            state.bookedTickets.unshift({ code, eventTitle: ev.title, tierName: tier.name, qty: state.selectedEventQty, holder });
+            state.bookedTickets.unshift({ id: `TKT-${Date.now()}`, code, eventTitle: ev.title, tierName: tier.name, qty: state.selectedEventQty, holder, status: 'Active', createdAt: new Date().toISOString(), eventDate: ev.dateLabel, eventTime: ev.timeLabel, venue: ev.venue, city: ev.city });
             document.getElementById('eticket-code').textContent = code;
             document.getElementById('eticket-event-name').textContent = ev.title;
             document.getElementById('eticket-holder').textContent = `${holder.toUpperCase()} • ${state.selectedEventQty}x ${tier.name}`;
@@ -4118,10 +4421,24 @@
             document.getElementById('retail-detail-cart-count').textContent = count;
             els.navRetailDot.classList.toggle('hidden', count === 0);
         }
-        function openCartDrawer() { renderCartItems(); els.cartModal.classList.remove('hidden'); }
+        let selectedRetailFulfillment = 'Shipping';
+        function setRetailFulfillment(value) {
+            selectedRetailFulfillment = value;
+            document.querySelectorAll('[data-fulfillment]').forEach(b=>{
+                const active=b.dataset.fulfillment===value;
+                b.classList.toggle('bg-[#142B49]',active); b.classList.toggle('text-white',active); b.classList.toggle('bg-white',!active);
+            });
+            const hint=document.getElementById('fulfillment-hint');
+            if(hint) hint.textContent=value==='Pickup'?'Pickup point: RAGAPOP Pickup Point, Jakarta (Demo) · 10:00–20:00 WIB':'Delivery fee Rp 20.000 · Demo carrier tracking';
+            const label=document.getElementById('cart-total-label');
+            if(label) label.textContent=value==='Pickup'?'Total · Pickup (+200 Pts)':'Total + Delivery (+200 Pts)';
+            renderCartItems();
+        }
+        document.querySelectorAll('[data-fulfillment]').forEach(b=>b.addEventListener('click',()=>setRetailFulfillment(b.dataset.fulfillment)));
+        function openCartDrawer() { setRetailFulfillment('Shipping'); renderCartItems(); els.cartModal.classList.remove('hidden'); }
         function renderCartItems() {
             const subtotal = state.cart.reduce((s, c) => s + c.price * c.qty, 0);
-            const total = state.cart.length ? subtotal + 20000 : 0;
+            const total = state.cart.length ? subtotal + (selectedRetailFulfillment==='Shipping'?20000:0) : 0;
             document.getElementById('cart-pocket-bal').textContent = formatRupiah(state.pocketBalance);
             els.cartTotalAmount.textContent = formatRupiah(total);
             if (!state.cart.length) {
@@ -4152,16 +4469,29 @@
         document.getElementById('checkout-submit-btn').onclick = () => {
             const subtotal = state.cart.reduce((s, c) => s + c.price * c.qty, 0);
             if (!subtotal) return;
-            const total = subtotal + 20000;
+            const total = subtotal + (selectedRetailFulfillment==='Shipping'?20000:0);
             if (total > state.pocketBalance) { showToast('Insufficient Pocket balance!'); return; }
             state.pocketBalance -= total;
-            state.pocketTransactions.unshift({ title: `RAGAPOP Retail (${state.cart.length} items)`, date: 'Baru saja', amount: -total, type: 'out' });
+            const paymentId = `PAY-${Date.now()}`;
+            const orderCreatedAt = new Date().toISOString();
+            state.pocketTransactions.unshift({ id: paymentId, title: `RAGAPOP Retail (${state.cart.length} items)`, date: 'Baru saja', createdAt: orderCreatedAt, amount: -total, type: 'out' });
+            const orderId = `RGO-${Date.now().toString().slice(-8)}`;
+            state.retailOrders.unshift({
+                id: orderId, title: `RAGAPOP Retail (${state.cart.length} items)`,
+                total, createdAt: orderCreatedAt, paymentId,
+                fulfillment: selectedRetailFulfillment, trackingNumber: selectedRetailFulfillment==='Shipping'?'DEMO-' + orderId.slice(-5):null,
+                carrier: selectedRetailFulfillment==='Shipping'?'RAGAPOP Demo Logistics':null,
+                pickupLocation: selectedRetailFulfillment==='Pickup'?'RAGAPOP Pickup Point, Jakarta (Demo)':null,
+                pickupHours: selectedRetailFulfillment==='Pickup'?'10:00–20:00 WIB (Demo)':null,
+                pickupCode: selectedRetailFulfillment==='Pickup'?'PU-'+orderId.slice(-5):null,
+                status: 'Processing', timeline: ['Order confirmed', 'Processing']
+            });
             state.ragaPoints += 200;
             state.cart = [];
             syncCartBadges();
             els.cartModal.classList.add('hidden');
-            if (state.activeTab === 'POCKET' || state.activeTab === 'HOME') renderActivePage();
-            showToast('Paid via Pocket! +200 RagaPoints earned');
+            if (state.activeTab === 'POCKET' || state.activeTab === 'HOME' || state.activeTab === 'TRANSACTIONS') renderActivePage();
+            showToast(`Order ${orderId} created · +200 RagaPoints earned`);
         };
 
         // Live Stream Overlay & Go Live Broadcaster
